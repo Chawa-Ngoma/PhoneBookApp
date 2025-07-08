@@ -2,6 +2,7 @@
 using PhoneApp.Models;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace PhoneApp.Pages.Contacts
 {
@@ -11,19 +12,17 @@ namespace PhoneApp.Pages.Contacts
         public HttpClient HttpClient { get; set; } = default!;
         [Inject]
         public NavigationManager NavManager { get; set; } = default!;
-        private ContactModel? _contacts { get; set; }
         private InternalContactModel _internalContactModel = new();
-        private JsonNode _errors { get; set; } = new JsonObject();
-        private string _apiErrorMessage = string.Empty;
+        private string _errorMessage = string.Empty;
 
-        private async Task SaveContact()
+        private async Task HandleValidSubmit()
         {
-            _errors = new JsonObject(); 
-            _apiErrorMessage = string.Empty; 
+            _errorMessage = string.Empty;
 
-            if (_internalContactModel.PhoneNumber.Length != 10 || !_internalContactModel.PhoneNumber.All(char.IsDigit))
+            if (!string.IsNullOrWhiteSpace(_internalContactModel.EmailAddress) &&
+                !IsValidEmail(_internalContactModel.EmailAddress))
             {
-                _errors["PhoneNumber"] = new JsonArray("Phone number must be exactly 10 digits and contain only numbers.");
+                _errorMessage = "Invalid email format.";
                 return;
             }
 
@@ -42,19 +41,26 @@ namespace PhoneApp.Pages.Contacts
                 try
                 {
                     var jsonResponse = JsonNode.Parse(strResponse);
-                    _errors = jsonResponse?["errors"] ?? new JsonObject();
+                    _errorMessage = jsonResponse?["message"]?.ToString() ?? "Failed to create contact.";
                 }
-                catch (Exception ex) 
+                catch
                 {
-                    _apiErrorMessage = strResponse;
+                    _errorMessage = strResponse;
                 }
             }
         }
+
 
         private void Cancel()
         {
             //redirect to list of contacts
             NavManager.NavigateTo("/Contacts");
+        }
+
+        public bool IsValidEmail(string emailaddress)
+        {
+            Regex validateEmailRegex = new Regex("^\\S+@\\S+\\.\\S+$"); 
+            return validateEmailRegex.IsMatch(emailaddress);
         }
     }
 }

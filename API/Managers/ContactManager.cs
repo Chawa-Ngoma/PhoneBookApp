@@ -59,7 +59,7 @@ namespace API.Managers
         {
             if (!string.IsNullOrWhiteSpace(name))
             {
-                return _contactRepository.SearchContact(name,null);  
+                return _contactRepository.SearchContact(name, null);  
             }
 
             else if (!string.IsNullOrWhiteSpace(phoneNumber))
@@ -87,14 +87,23 @@ namespace API.Managers
             return _contactRepository.UpdateContact(contact);
             
         }
-
-        ///<inheritdoc cref="IContactManager.contactExists(string)"/>
-        public bool contactExists(string phoneNumber)
+        ///<inheritdoc cref="IContactManager.ContactExists(string)"/>
+        public bool ContactExists(string phoneNumber)
         {
-            if (_contactRepository.contactExists(phoneNumber))
+            if (_contactRepository.ContactExists(phoneNumber))
                 return true;
 
             return false;
         }
+
+        ///<inheritdoc cref="IContactManager.ContactExists(string, int)"/>
+        public bool ContactExists(string phoneNumber, int id)
+        {
+            if (_contactRepository.ContactExists(phoneNumber, id))
+                return true;
+
+            return false;
+        }
+
     }
 }

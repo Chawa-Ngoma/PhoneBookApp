@@ -54,7 +54,15 @@ namespace API.Managers
         /// </summary>
         /// <param name="phoneNumber" cref="string">></param>
         /// <returns></returns>
-        bool contactExists(string phoneNumber);
+        bool ContactExists(string phoneNumber);
+
+        /// <summary>
+        /// Check if a contact exists by phone number and excludes Id
+        /// </summary>
+        /// <param name="phoneNumber" cref="string">></param>
+        /// <param name="id" cref="int">></param>
+        /// <returns></returns>
+        bool ContactExists(string phoneNumber, int id);
 
     }
 }

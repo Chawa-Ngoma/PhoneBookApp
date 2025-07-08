@@ -1,46 +1,51 @@
 ﻿@page "/Contacts/CreateContact"
 
-@if (!string.IsNullOrWhiteSpace(_apiErrorMessage))
-{
-    <div class="alert alert-danger">@_apiErrorMessage</div>
-}
+<EditForm Model="_internalContactModel" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
-<div class="row">
-    <div class="col-lg-8">
-        <h1 class="mb-5">New Contact</h1>
-    </div>
-
-    <div class="row mb-3">
-        <label class="col-md-4 col-form-label">First Name</label>
-        <div class="col-md-8">
-            <input class="form-control" @bind="_internalContactModel.Name" />
-            <span class="text-danger">@_errors["Name"]?[0]</span>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-            <label class="col-md-4 col-form-label">Phone Number</label>
-            <div class="col-md-8">
-            <input class="form-control" @bind="_internalContactModel.PhoneNumber" />
-            <span class="text-danger">@_errors["PhoneNumber"]?[0]</span>
-            </div>
-    </div>
-
-    <div class="row mb-3">
-        <label class="col-md-4 col-form-label">Email</label>
-        <div class="col-md-8">
-            <input class="form-control" @bind="_internalContactModel.EmailAddress" />
-            <span class="text-danger">@_errors["EmailAddress"]?[0]</span>
-        </div>
-    </div>
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <div class="alert alert-danger">@_errorMessage</div>
+    }
 
     <div class="row">
-        <div class="offset-md-4 col-md-4 d-grid">
-            <button class="btn btn-outline-success" @onclick="SaveContact">Save Contact</button>
+        <div class="col-lg-8">
+            <h1 class="mb-5">New Contact</h1>
         </div>
-        <div class="col-md-4 d-grid">
-            <button class="btn btn-outline-warning" @onclick="Cancel">Cancel</button>
-        </div>
-    </div>
 
-</div>
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">First Name</label>
+            <div class="col-md-8">
+                <InputText class="form-control" @bind-Value="_internalContactModel.Name"/>
+                <ValidationMessage For="@(() => _internalContactModel.Name)"/>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Phone Number</label>
+            <div class="col-md-8">
+                <InputText class="form-control" @bind-Value="_internalContactModel.PhoneNumber" />
+                <ValidationMessage For="@(() => _internalContactModel.PhoneNumber)" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-md-4 col-form-label">Email</label>
+            <div class="col-md-8">
+                <InputText class="form-control" @bind-Value="_internalContactModel.EmailAddress" />
+                <ValidationMessage For="@(() => _internalContactModel.EmailAddress)" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="offset-md-4 col-md-4 d-grid">
+                <button type="submit" class="btn btn-outline-success">Save Contact</button>
+            </div>
+            <div class="col-md-4 d-grid">
+                <button class="btn btn-outline-warning" @onclick="Cancel">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</EditForm>

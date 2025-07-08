@@ -48,12 +48,12 @@ namespace API.Repositories
 
             if (!string.IsNullOrWhiteSpace(name))
             {
-                contacts = contacts.Where(c => c.Name == name).ToList();
+                contacts = contacts.Where(c => c.Name.Contains(name)).ToList();
             }
 
             if (!string.IsNullOrWhiteSpace(phoneNumber))
             {
-                contacts = contacts.Where(c => c.PhoneNumber == phoneNumber).ToList();
+                contacts = contacts.Where(c => c.PhoneNumber.Contains(phoneNumber)).ToList();
             }
 
             return contacts;
@@ -66,14 +66,14 @@ namespace API.Repositories
             return contact;
         }
 
-        //public ContactModel? FindContact(string phoneNumber)
-        //{
-        //    return _dbContext.Contacts.Find(phoneNumber);
-        //}
-
-        public bool contactExists(string phoneNumber)
+        public bool ContactExists(string phoneNumber)
         {
             return _dbContext.Contacts.Any(c => c.PhoneNumber == phoneNumber);
+        }
+
+        public bool ContactExists(string phoneNumber, int id)
+        {
+            return _dbContext.Contacts.Any(c => c.PhoneNumber == phoneNumber && c.Id != id);
         }
 
        

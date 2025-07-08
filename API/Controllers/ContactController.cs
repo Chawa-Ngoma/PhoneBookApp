@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         /// <summary>
-        /// A method to get all contacts by an id
+        /// A method to get a contact by an id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -51,7 +51,7 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult CreateContact([FromBody] CreateContactRequest request)
         {
-            if (_contactManager.contactExists(request.PhoneNumber))
+            if (_contactManager.ContactExists(request.PhoneNumber))
                 return BadRequest("This number already exists");
 
             var newContact = _contactManager.CreateContact(request);
@@ -71,7 +71,7 @@ namespace API.Controllers
             if (request.Id != id)
                 return NotFound();
 
-            if (_contactManager.contactExists(request.PhoneNumber))
+            if (_contactManager.ContactExists(request.PhoneNumber, request.Id))
                 return BadRequest("This number already exists");
 
             var updateContact = _contactManager.UpdateContact(request);

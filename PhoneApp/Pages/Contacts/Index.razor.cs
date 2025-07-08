@@ -11,9 +11,9 @@ namespace PhoneApp.Pages.Contacts
         private List<ContactModel>? _contacts;
         private List<ContactModel>? _filteredContacts;
 
-        private bool showSearchForm = false;
-        private string searchName = string.Empty;
-        private string searchPhone = string.Empty;
+        private bool _showSearchForm = false;
+        private string _searchName = string.Empty;
+        private string _searchPhone = string.Empty;
 
         private List<ContactModel>? _contactList =>
         (_filteredContacts != null && _filteredContacts.Any()) ? _filteredContacts : _contacts;
@@ -32,7 +32,7 @@ namespace PhoneApp.Pages.Contacts
 
         private void ToggleSearchForm()
         {
-            showSearchForm = !showSearchForm;
+            _showSearchForm = !_showSearchForm;
         }
 
         private void SearchContacts()
@@ -41,15 +41,15 @@ namespace PhoneApp.Pages.Contacts
 
             _filteredContacts = _contacts
                 .Where(c =>
-                    (string.IsNullOrWhiteSpace(searchName) || c.Name.Contains(searchName, StringComparison.OrdinalIgnoreCase)) &&
-                    (string.IsNullOrWhiteSpace(searchPhone) || c.PhoneNumber.Contains(searchPhone))
+                    (string.IsNullOrWhiteSpace(_searchName) || c.Name.Contains(_searchName, StringComparison.OrdinalIgnoreCase)) &&
+                    (string.IsNullOrWhiteSpace(_searchPhone) || c.PhoneNumber.Contains(_searchPhone))
                 ).ToList();
         }
 
         private void ResetSearch()
         {
-            searchName = string.Empty;
-            searchPhone = string.Empty;
+            _searchName = string.Empty;
+            _searchPhone = string.Empty;
             _filteredContacts = _contacts;
         }
     }

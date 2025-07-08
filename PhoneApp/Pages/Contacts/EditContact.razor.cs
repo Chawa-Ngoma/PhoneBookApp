@@ -2,6 +2,7 @@
 using PhoneApp.Models;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace PhoneApp.Pages.Contacts
 {
@@ -19,7 +20,7 @@ namespace PhoneApp.Pages.Contacts
         private ContactModel? _contacts { get; set; }
         private InternalContactModel _internalContactModel = new();
         private JsonNode _errors { get; set; } = new JsonObject();
-        private string _apiErrorMessage = string.Empty;
+        private string _errorMessage = string.Empty;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -38,8 +39,15 @@ namespace PhoneApp.Pages.Contacts
             }
         }
 
-        private async Task SaveContact()
+        private async Task HandleValidSubmit()
         {
+            if (!string.IsNullOrWhiteSpace(_internalContactModel.EmailAddress) &&
+                !IsValidEmail(_internalContactModel.EmailAddress))
+            {
+                _errorMessage = "Invalid email format.";
+                return;
+            }
+
             var response = await HttpClient.PutAsJsonAsync("https://localhost:4000/api/Contact/" + Id, _internalContactModel);
 
             if (response.IsSuccessStatusCode)
@@ -59,15 +67,20 @@ namespace PhoneApp.Pages.Contacts
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Exception: " + ex.Message);
+                    _errorMessage = strResponse;
                 }
             }
         }
-
         private void Cancel()
         {
             //redirect to list of Contacts
             NavManager.NavigateTo("/Contacts");
+        }
+
+        public bool IsValidEmail(string emailaddress)
+        {
+            Regex validateEmailRegex = new Regex("^\\S+@\\S+\\.\\S+$");
+            return validateEmailRegex.IsMatch(emailaddress);
         }
 
     }
